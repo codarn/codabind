@@ -6,6 +6,7 @@ import { RecordRow } from "./components/RecordRow";
 import { StatusBar } from "./components/StatusBar";
 import { Topbar } from "./components/Topbar";
 import { ZoneMeta } from "./components/ZoneMeta";
+import { useDnsCheck } from "./hooks/useDnsCheck";
 import { useZoneFile } from "./hooks/useZoneFile";
 import { emptyZone, newRecord } from "./zone/parser";
 import { serializeZone } from "./zone/serializer";
@@ -27,6 +28,7 @@ export function App() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("ALL");
   const [selectedPath, setSelectedPath] = useState<string[]>([]);
   const { parseErrors, importedName, importFile, exportZone, reset } = useZoneFile();
+  const dns = useDnsCheck();
 
   const issues = useMemo(() => validateZone(zone), [zone]);
   const tree = useMemo(() => buildTree(zone.records, zone.origin), [zone.records, zone.origin]);
@@ -71,6 +73,7 @@ export function App() {
   const handleNew = () => {
     setZone(emptyZone());
     reset();
+    dns.reset();
     setSelectedPath([]);
   };
 
@@ -93,10 +96,13 @@ export function App() {
     <div className="app">
       <Topbar
         canExport={errorCount === 0}
+        isChecking={dns.isChecking}
         onImport={handleImport}
         onExport={() => exportZone(zone)}
         onNew={handleNew}
         onAddRecord={handleAddRecord}
+        onCheck={() => dns.checkAll(zone)}
+        onCancelCheck={dns.cancel}
       />
 
       <ZoneMeta zone={zone} importedName={importedName} onChange={setZone} />
@@ -136,6 +142,8 @@ export function App() {
                   key={r.id}
                   record={r}
                   issues={issuesByRecord.get(r.id) ?? []}
+                  checkResult={dns.results.get(r.id)}
+                  showChecks={dns.results.size > 0 || dns.isChecking}
                   onChange={updateRecord}
                   onDelete={() => deleteRecord(r.id)}
                 />

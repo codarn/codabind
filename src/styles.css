@@ -412,6 +412,81 @@ button.delete:hover {
   color: var(--warn);
 }
 
+.resolver-checks {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.resolver-checks .resolver-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.resolver-checks .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+.resolver-checks .dot.match { background: var(--ok); border-color: var(--ok); }
+.resolver-checks .dot.stale { background: var(--warn); border-color: var(--warn); }
+.resolver-checks .dot.missing { background: transparent; border-color: var(--muted); }
+.resolver-checks .dot.error { background: var(--error); border-color: var(--error); }
+.resolver-checks .dot.pending { background: transparent; border-color: var(--border); }
+
+.check-status {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.check-status.match { color: var(--ok); border-color: var(--ok); }
+.check-status.propagating { color: var(--warn); border-color: var(--warn); }
+.check-status.mismatch,
+.check-status.error { color: var(--error); border-color: var(--error); }
+.check-status.missing { color: var(--muted); border-color: var(--muted); }
+.check-status.diverged { color: var(--warn); border-color: var(--warn); }
+
+.resolver-table {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 11px;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+.resolver-table th,
+.resolver-table td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.resolver-table th {
+  color: var(--muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+.resolver-table .answer {
+  word-break: break-all;
+}
+.resolver-table .row.match td { color: var(--ok); }
+.resolver-table .row.stale td { color: var(--warn); }
+.resolver-table .row.missing td { color: var(--muted); }
+.resolver-table .row.error td { color: var(--error); }
+
 button.add {
   align-self: flex-start;
   margin-top: 4px;

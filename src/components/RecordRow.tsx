@@ -1,3 +1,4 @@
+import type { RecordCheckResult } from "../dns/types";
 import {
   RECORD_TYPES,
   type RecordData,
@@ -7,10 +8,13 @@ import {
 } from "../zone/types";
 import { Field, fieldError } from "./Field";
 import { RdataEditor } from "./RdataEditor";
+import { ResolverChecks } from "./ResolverChecks";
 
 interface RecordRowProps {
   record: ZoneRecord;
   issues: ValidationIssue[];
+  checkResult?: RecordCheckResult | undefined;
+  showChecks: boolean;
   onChange: (record: ZoneRecord) => void;
   onDelete: () => void;
 }
@@ -37,7 +41,14 @@ function emptyDataFor(type: RecordType): RecordData {
   }
 }
 
-export function RecordRow({ record, issues, onChange, onDelete }: RecordRowProps) {
+export function RecordRow({
+  record,
+  issues,
+  checkResult,
+  showChecks,
+  onChange,
+  onDelete,
+}: RecordRowProps) {
   const generalIssues = issues.filter((i) => !i.field);
 
   const updateMeta = (patch: Partial<Pick<ZoneRecord, "name" | "ttl" | "class">>) =>
@@ -89,6 +100,8 @@ export function RecordRow({ record, issues, onChange, onDelete }: RecordRowProps
       {generalIssues.map((i, idx) => (
         <div key={idx} className={`issue ${i.severity}`}>{i.message}</div>
       ))}
+
+      {showChecks && <ResolverChecks record={record} result={checkResult} />}
     </div>
   );
 }
