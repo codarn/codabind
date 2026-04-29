@@ -84,11 +84,15 @@ export function liveValueFor(rec: ZoneRecord, ans: DohAnswer): string {
 function outcomeFor(rec: ZoneRecord, resp: ResolverResponse): PerResolverOutcome {
   if (resp.status === "error") return "error";
   const ianaType = TYPE_TO_IANA[rec.record.type];
+  const liveAnswers = resp.answers.filter((a) => a.type === ianaType);
+  if (liveAnswers.length === 0) return "missing";
+  // SOA serials drift independently — registrars auto-bump them on every
+  // change, so a captured export will almost always trail the live serial.
+  // Confirm the resolver has *some* SOA; surface the live serial in the
+  // expanded view rather than flagging mismatch on every check.
+  if (rec.record.type === "SOA") return "match";
   const expected = new Set(expectedValuesFor(rec).map((v) => v.toLowerCase()));
-  const liveValues = resp.answers
-    .filter((a) => a.type === ianaType)
-    .map((a) => liveValueFor(rec, a).toLowerCase());
-  if (liveValues.length === 0) return "missing";
+  const liveValues = liveAnswers.map((a) => liveValueFor(rec, a).toLowerCase());
   return liveValues.some((v) => expected.has(v)) ? "match" : "stale";
 }
 

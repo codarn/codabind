@@ -133,4 +133,30 @@ describe("statusFor", () => {
     ]);
     expect(statusFor(rec, m)).toBe("missing");
   });
+
+  it("SOA: matches whenever a resolver returns any SOA, regardless of serial drift", () => {
+    const soa: ZoneRecord = {
+      id: crypto.randomUUID(),
+      name: "@",
+      ttl: "",
+      class: "IN",
+      record: {
+        type: "SOA",
+        data: {
+          mname: "ns1.example.com.",
+          rname: "admin.example.com.",
+          serial: "1",
+          refresh: "1h",
+          retry: "1h",
+          expire: "1w",
+          minimum: "1h",
+        },
+      },
+    };
+    const m = new Map<string, ResolverResponse>([
+      ["a", ok("ns admin 99999999 3600 3600 604800 3600", TYPE_TO_IANA.SOA)],
+      ["b", ok("ns admin 88888888 3600 3600 604800 3600", TYPE_TO_IANA.SOA)],
+    ]);
+    expect(statusFor(soa, m)).toBe("match");
+  });
 });
