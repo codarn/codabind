@@ -28,6 +28,43 @@ function stripComments(line: string): string {
   return out;
 }
 
+// Registrar exports (Loopia, etc.) often emit unquoted TXT records like
+// `_dmarc IN TXT v=DMARC1; p=none; rua=...`. BIND treats ; as a comment
+// outside quotes, which would truncate the value. Detect this shape and
+// wrap the rdata in quotes before comment stripping runs.
+const UNQUOTED_TXT_RE =
+  /^(\s*\S+\s+(?:\d+\s+)?(?:IN\s+|CH\s+|HS\s+)?|\s+(?:\d+\s+)?(?:IN\s+|CH\s+|HS\s+)?)TXT(\s+)/i;
+
+function quoteUnquotedTxt(line: string): string {
+  const m = line.match(UNQUOTED_TXT_RE);
+  if (!m) return line;
+  const headerEnd = (m.index ?? 0) + m[0].length;
+  let rdata = line.slice(headerEnd);
+  if (rdata.trimStart().startsWith('"')) return line;
+  if (!rdata.trim()) return line;
+  // BIND comments at end-of-line are conventionally " ;" (whitespace + ;).
+  // Truncate there so the `;` characters embedded in DMARC/SPF survive.
+  const cmtIdx = rdata.search(/\s;/);
+  if (cmtIdx !== -1) rdata = rdata.slice(0, cmtIdx);
+  rdata = rdata.trim();
+  if (!rdata) return line;
+  const escaped = rdata.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return `${line.slice(0, headerEnd)}"${escaped}"`;
+}
+
+function unquoteTxtForStorage(s: string): string {
+  const t = s.trim();
+  if (t.length < 2 || !t.startsWith('"') || !t.endsWith('"')) return t;
+  let inQuote = false;
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] === '"' && !isEscaped(t, i)) {
+      inQuote = !inQuote;
+      if (!inQuote && i < t.length - 1) return t; // multi-string TXT, keep as-is
+    }
+  }
+  return t.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+}
+
 interface JoinedLine {
   text: string;
   startsBlank: boolean;
@@ -41,7 +78,7 @@ function joinParenLines(raw: string): JoinedLine[] {
   let startsBlank = false;
   let started = false;
   for (const ln of rawLines) {
-    const stripped = stripComments(ln);
+    const stripped = stripComments(quoteUnquotedTxt(ln));
     if (!started && stripped.length > 0) {
       startsBlank = /^\s/.test(stripped);
       started = true;
@@ -128,7 +165,7 @@ function buildRecordData(type: RecordType, rdata: string[]): RecordData {
         data: { priority: rdata[0] ?? "", target: rdata[1] ?? "" },
       };
     case "TXT":
-      return { type: "TXT", data: { text: rdata.join(" ") } };
+      return { type: "TXT", data: { text: unquoteTxtForStorage(rdata.join(" ")) } };
     case "SRV":
       return {
         type: "SRV",

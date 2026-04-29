@@ -58,14 +58,38 @@ describe("parseZone — comment and quote handling", () => {
     const { zone } = parseZone(`@  IN  TXT  "v=spf1 -all"  ; this is a comment\n`);
     expect(zone.records).toHaveLength(1);
     const r = zone.records[0]?.record;
-    if (r?.type === "TXT") expect(r.data.text).toBe('"v=spf1 -all"');
+    if (r?.type === "TXT") expect(r.data.text).toBe("v=spf1 -all");
   });
 
   it("keeps ; that lives inside a quoted TXT", () => {
     const { zone } = parseZone(`@  IN  TXT  "k=v; n=2"\n`);
     expect(zone.records).toHaveLength(1);
     const r = zone.records[0]?.record;
-    if (r?.type === "TXT") expect(r.data.text).toBe('"k=v; n=2"');
+    if (r?.type === "TXT") expect(r.data.text).toBe("k=v; n=2");
+  });
+
+  it("rescues unquoted TXT records with embedded ; (Loopia/registrar exports)", () => {
+    const { zone } = parseZone(`_dmarc IN TXT v=DMARC1; p=none; rua=mailto:foo@example.com\n`);
+    expect(zone.records).toHaveLength(1);
+    const r = zone.records[0]?.record;
+    expect(r?.type).toBe("TXT");
+    if (r?.type === "TXT") {
+      expect(r.data.text).toBe("v=DMARC1; p=none; rua=mailto:foo@example.com");
+    }
+  });
+
+  it("strips a real end-of-line comment from an unquoted TXT", () => {
+    const { zone } = parseZone(`_dmarc IN TXT v=DMARC1 ; trailing comment\n`);
+    expect(zone.records).toHaveLength(1);
+    const r = zone.records[0]?.record;
+    if (r?.type === "TXT") expect(r.data.text).toBe("v=DMARC1");
+  });
+
+  it("preserves multi-string quoted TXT", () => {
+    const { zone } = parseZone(`@ IN TXT "v=DKIM1; k=rsa" "p=MIIBIj"\n`);
+    expect(zone.records).toHaveLength(1);
+    const r = zone.records[0]?.record;
+    if (r?.type === "TXT") expect(r.data.text).toBe('"v=DKIM1; k=rsa" "p=MIIBIj"');
   });
 
   it("handles escaped quotes via odd-length backslash runs", () => {
