@@ -4,7 +4,6 @@ import react from "@vitejs/plugin-react";
 const RESOLVER_HOSTS = [
   "https://cloudflare-dns.com",
   "https://dns.google",
-  "https://dns.quad9.net:5053",
   "https://doh.dns.sb",
 ].join(" ");
 
@@ -12,6 +11,7 @@ const PROD_CSP = [
   "default-src 'self'",
   "style-src 'self'",
   "script-src 'self'",
+  "worker-src 'self'",
   "img-src 'self' data:",
   `connect-src 'self' ${RESOLVER_HOSTS}`,
   "base-uri 'self'",
@@ -24,6 +24,7 @@ const DEV_CSP = [
   "default-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' 'unsafe-inline'",
+  "worker-src 'self' blob:",
   "img-src 'self' data:",
   `connect-src 'self' ws: http: https: ${RESOLVER_HOSTS}`,
   "base-uri 'self'",

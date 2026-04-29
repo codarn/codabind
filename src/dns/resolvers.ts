@@ -22,13 +22,6 @@ export const DEFAULT_RESOLVERS: DohResolver[] = [
     acceptHeader: "application/dns-json",
   },
   {
-    id: "quad9",
-    name: "Quad9",
-    region: "Anycast (CH)",
-    url: (n, t) => `https://dns.quad9.net:5053/dns-query?name=${encodeURIComponent(n)}&type=${encodeURIComponent(t)}`,
-    acceptHeader: "application/dns-json",
-  },
-  {
     id: "dnssb",
     name: "DNS.SB",
     region: "Anycast (SG)",
@@ -40,6 +33,5 @@ export const DEFAULT_RESOLVERS: DohResolver[] = [
 export const RESOLVER_HOSTS = [
   "https://cloudflare-dns.com",
   "https://dns.google",
-  "https://dns.quad9.net:5053",
   "https://doh.dns.sb",
 ] as const;
