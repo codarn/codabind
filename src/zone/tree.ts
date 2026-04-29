@@ -14,6 +14,17 @@ function labelsOf(fq: string): string[] {
   return trimmed.split(".").reverse();
 }
 
+export function compareFqdnsByLabels(a: string, b: string): number {
+  const al = labelsOf(a);
+  const bl = labelsOf(b);
+  const len = Math.min(al.length, bl.length);
+  for (let i = 0; i < len; i++) {
+    const cmp = al[i]!.localeCompare(bl[i]!);
+    if (cmp !== 0) return cmp;
+  }
+  return al.length - bl.length;
+}
+
 export interface TreeNode {
   label: string;
   path: string[];

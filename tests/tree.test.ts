@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildTree, fqdn, findNode, recordsInSubtree } from "../src/zone/tree";
+import {
+  buildTree,
+  compareFqdnsByLabels,
+  fqdn,
+  findNode,
+  recordsInSubtree,
+} from "../src/zone/tree";
 import type { ZoneRecord } from "../src/zone/types";
 
 const r = (name: string, type: ZoneRecord["record"]["type"] = "A"): ZoneRecord => ({
@@ -37,6 +43,22 @@ describe("buildTree", () => {
     expect(example?.label).toBe("example");
     expect(example?.selfRecords).toHaveLength(1);
     expect(example?.children.map((c) => c.label).sort()).toEqual(["api", "www"]);
+  });
+});
+
+describe("compareFqdnsByLabels", () => {
+  it("orders by reversed labels (TLD first)", () => {
+    const sorted = ["www.example.com.", "api.example.com.", "example.com.", "example.org."]
+      .sort(compareFqdnsByLabels);
+    expect(sorted).toEqual([
+      "example.com.",
+      "api.example.com.",
+      "www.example.com.",
+      "example.org.",
+    ]);
+  });
+  it("treats shorter fqdn as smaller when prefixes match", () => {
+    expect(compareFqdnsByLabels("example.com.", "www.example.com.")).toBeLessThan(0);
   });
 });
 

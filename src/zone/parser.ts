@@ -6,7 +6,9 @@ import {
   type ZoneRecord,
 } from "./types";
 
-const nextId = () => crypto.randomUUID();
+// BIND zone-file subset: handles $TTL, $ORIGIN, multi-line SOA via parens,
+// owner-name inheritance from leading whitespace, ; comments, BIND duration
+// syntax. Out of scope: $INCLUDE, $GENERATE, IDNs, RRSIG/DNSSEC records.
 
 function isEscaped(line: string, i: number): boolean {
   let backslashes = 0;
@@ -216,7 +218,7 @@ export function parseZone(text: string): ParseResult {
     const rdata = tokens.slice(idx);
 
     records.push({
-      id: nextId(),
+      id: crypto.randomUUID(),
       name,
       ttl: recTtl,
       class: recClass,
@@ -237,7 +239,7 @@ export function emptyZone(): Zone {
 
 export function newRecord(type: RecordType = "A"): ZoneRecord {
   return {
-    id: nextId(),
+    id: crypto.randomUUID(),
     name: "@",
     ttl: "",
     class: "IN",

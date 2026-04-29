@@ -10,7 +10,7 @@ import {
 import type { Zone, ZoneRecord } from "../src/zone/types";
 
 const rec = (over: Partial<ZoneRecord> & { record: ZoneRecord["record"] }): ZoneRecord => ({
-  id: "id-" + Math.random(),
+  id: crypto.randomUUID(),
   name: "@",
   ttl: "",
   class: "IN",
