@@ -32,8 +32,10 @@ function stripComments(line: string): string {
 // `_dmarc IN TXT v=DMARC1; p=none; rua=...`. BIND treats ; as a comment
 // outside quotes, which would truncate the value. Detect this shape and
 // wrap the rdata in quotes before comment stripping runs.
+// Match TTL and class in either order before the TXT keyword. BIND accepts
+// both `_dmarc IN 360 TXT ...` (Loopia) and `_dmarc 360 IN TXT ...`.
 const UNQUOTED_TXT_RE =
-  /^(\s*\S+\s+(?:\d+\s+)?(?:IN\s+|CH\s+|HS\s+)?|\s+(?:\d+\s+)?(?:IN\s+|CH\s+|HS\s+)?)TXT(\s+)/i;
+  /^(\s*\S+\s+(?:(?:\d+|IN|CH|HS)\s+){0,2}|\s+(?:(?:\d+|IN|CH|HS)\s+){0,2})TXT(\s+)/i;
 
 function quoteUnquotedTxt(line: string): string {
   const m = line.match(UNQUOTED_TXT_RE);

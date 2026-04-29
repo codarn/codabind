@@ -78,6 +78,27 @@ describe("parseZone — comment and quote handling", () => {
     }
   });
 
+  it("handles Loopia's class-then-TTL ordering before TXT", () => {
+    const line = `_dmarc                          IN      360     TXT     v=DMARC1; p=none;\n`;
+    const { zone } = parseZone(line);
+    expect(zone.records).toHaveLength(1);
+    const r = zone.records[0];
+    expect(r?.ttl).toBe("360");
+    expect(r?.class).toBe("IN");
+    if (r?.record.type === "TXT") {
+      expect(r.record.data.text).toBe("v=DMARC1; p=none;");
+    }
+  });
+
+  it("wraps and stores opaque-token unquoted TXT (e.g. _pdcid challenge)", () => {
+    const line = `_pdcid IN 360 TXT O2XP3XcDj6JMhJPqR2VDZo8ftnMocX7_rsHxRmTrjq7eLcnU\n`;
+    const { zone } = parseZone(line);
+    const r = zone.records[0];
+    if (r?.record.type === "TXT") {
+      expect(r.record.data.text).toBe("O2XP3XcDj6JMhJPqR2VDZo8ftnMocX7_rsHxRmTrjq7eLcnU");
+    }
+  });
+
   it("strips a real end-of-line comment from an unquoted TXT", () => {
     const { zone } = parseZone(`_dmarc IN TXT v=DMARC1 ; trailing comment\n`);
     expect(zone.records).toHaveLength(1);
