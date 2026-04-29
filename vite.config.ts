@@ -5,7 +5,6 @@ const RESOLVER_HOSTS = [
   "https://cloudflare-dns.com",
   "https://dns.google",
   "https://dns.quad9.net:5053",
-  "https://unfiltered.adguard-dns.com",
   "https://doh.dns.sb",
 ].join(" ");
 

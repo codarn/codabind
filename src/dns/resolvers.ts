@@ -29,13 +29,6 @@ export const DEFAULT_RESOLVERS: DohResolver[] = [
     acceptHeader: "application/dns-json",
   },
   {
-    id: "adguard",
-    name: "AdGuard",
-    region: "Anycast (CY)",
-    url: (n, t) => `https://unfiltered.adguard-dns.com/resolve?name=${encodeURIComponent(n)}&type=${encodeURIComponent(t)}`,
-    acceptHeader: "application/dns-json",
-  },
-  {
     id: "dnssb",
     name: "DNS.SB",
     region: "Anycast (SG)",
@@ -48,6 +41,5 @@ export const RESOLVER_HOSTS = [
   "https://cloudflare-dns.com",
   "https://dns.google",
   "https://dns.quad9.net:5053",
-  "https://unfiltered.adguard-dns.com",
   "https://doh.dns.sb",
 ] as const;
