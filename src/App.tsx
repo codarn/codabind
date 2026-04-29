@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { DomainTree } from "./components/DomainTree";
+import { EmailHealth } from "./components/EmailHealth";
 import { IssuesPanel } from "./components/IssuesPanel";
 import { Preview } from "./components/Preview";
 import { RecordRow } from "./components/RecordRow";
@@ -106,6 +107,8 @@ export function App() {
       />
 
       <ZoneMeta zone={zone} importedName={importedName} onChange={setZone} />
+
+      <EmailHealth zone={zone} />
 
       <StatusBar
         errorCount={errorCount}
