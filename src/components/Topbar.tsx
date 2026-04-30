@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { GitHubLink } from "./GitHubLink";
 
 interface TopbarProps {
   canExport: boolean;
@@ -55,6 +56,7 @@ export function Topbar({
           </button>
         )}
         <button onClick={onAddRecord} className="primary">+ New record</button>
+        <GitHubLink />
       </div>
     </header>
   );

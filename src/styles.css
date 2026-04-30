@@ -196,6 +196,34 @@ button.primary:hover:not(:disabled) {
 .actions {
   display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1;
+  transition: background 0.1s, border-color 0.1s;
+}
+.github-link:hover {
+  background: var(--panel-2);
+  border-color: var(--accent);
+}
+.github-link svg {
+  display: block;
+}
+.github-link .star-count {
+  color: var(--muted);
+  font-size: 12px;
+  font-family: var(--mono);
 }
 
 button {
