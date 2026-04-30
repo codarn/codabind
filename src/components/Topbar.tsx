@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { GitHubLink } from "./GitHubLink";
+import { Logo } from "./Logo";
 
 interface TopbarProps {
   canExport: boolean;
@@ -26,7 +27,10 @@ export function Topbar({
 
   return (
     <header className="topbar">
-      <h1>Codabind</h1>
+      <div className="brand">
+        <Logo />
+        <h1>Codabind</h1>
+      </div>
       <div className="actions">
         <button onClick={() => fileInput.current?.click()}>Import…</button>
         <input
