@@ -2,6 +2,14 @@
   "name": "codabind",
   "private": true,
   "version": "0.1.0",
+  "license": "MIT",
+  "author": "Codarn AB",
+  "description": "Browser-only BIND zone file editor with multi-resolver propagation checks and email-deliverability linting.",
+  "homepage": "https://github.com/codarn/codabind",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codarn/codabind.git"
+  },
   "type": "module",
   "engines": {
     "node": ">=20"
