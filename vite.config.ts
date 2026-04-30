@@ -7,13 +7,15 @@ const RESOLVER_HOSTS = [
   "https://doh.dns.sb",
 ].join(" ");
 
+const API_HOSTS = ["https://api.github.com"].join(" ");
+
 const PROD_CSP = [
   "default-src 'self'",
   "style-src 'self'",
   "script-src 'self'",
   "worker-src 'self'",
   "img-src 'self' data:",
-  `connect-src 'self' ${RESOLVER_HOSTS}`,
+  `connect-src 'self' ${RESOLVER_HOSTS} ${API_HOSTS}`,
   "base-uri 'self'",
   "form-action 'none'",
   "object-src 'none'",
@@ -26,7 +28,7 @@ const DEV_CSP = [
   "script-src 'self' 'unsafe-inline'",
   "worker-src 'self' blob:",
   "img-src 'self' data:",
-  `connect-src 'self' ws: http: https: ${RESOLVER_HOSTS}`,
+  `connect-src 'self' ws: http: https: ${RESOLVER_HOSTS} ${API_HOSTS}`,
   "base-uri 'self'",
   "form-action 'none'",
   "object-src 'none'",
