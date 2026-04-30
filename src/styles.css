@@ -339,6 +339,49 @@ button:disabled {
   word-break: break-all;
 }
 
+.next-step {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.next-step-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+.next-step-rationale {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.next-step-value {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  word-break: break-all;
+}
+.next-step-apply {
+  align-self: flex-end;
+  padding: 4px 12px;
+  font-size: 11px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.next-step-apply:hover:not(:disabled) {
+  background: #3b78f0;
+  border-color: #3b78f0;
+}
+
 .status {
   display: flex;
   gap: 8px;

@@ -7,6 +7,7 @@ import { RecordRow } from "./components/RecordRow";
 import { StatusBar } from "./components/StatusBar";
 import { Topbar } from "./components/Topbar";
 import { ZoneMeta } from "./components/ZoneMeta";
+import type { DmarcSuggestion } from "./email/dmarc-ramp";
 import { useDnsCheck } from "./hooks/useDnsCheck";
 import { useZoneFile } from "./hooks/useZoneFile";
 import { emptyZone, newRecord } from "./zone/parser";
@@ -93,6 +94,34 @@ export function App() {
   const deleteRecord = (id: string) =>
     setZone((z) => ({ ...z, records: z.records.filter((r) => r.id !== id) }));
 
+  const applyDmarcSuggestion = (s: DmarcSuggestion) => {
+    setZone((z) => {
+      if (s.applyTo) {
+        return {
+          ...z,
+          records: z.records.map((r) =>
+            r.id === s.applyTo!.id
+              ? { ...r, record: { type: "TXT" as const, data: { text: s.nextValue } } }
+              : r,
+          ),
+        };
+      }
+      return {
+        ...z,
+        records: [
+          ...z.records,
+          {
+            id: crypto.randomUUID(),
+            name: "_dmarc",
+            ttl: "",
+            class: "IN",
+            record: { type: "TXT", data: { text: s.nextValue } },
+          },
+        ],
+      };
+    });
+  };
+
   return (
     <div className="app">
       <Topbar
@@ -108,7 +137,7 @@ export function App() {
 
       <ZoneMeta zone={zone} importedName={importedName} onChange={setZone} />
 
-      <EmailHealth zone={zone} />
+      <EmailHealth zone={zone} onApplyDmarc={applyDmarcSuggestion} />
 
       <StatusBar
         errorCount={errorCount}
