@@ -193,6 +193,16 @@ button.primary:hover:not(:disabled) {
   font-weight: 600;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand svg {
+  display: block;
+  flex-shrink: 0;
+}
+
 .actions {
   display: flex;
   gap: 8px;
