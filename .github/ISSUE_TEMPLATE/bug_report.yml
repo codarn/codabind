@@ -1,0 +1,65 @@
+name: Bug report
+description: Something broke or behaved unexpectedly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report. Most bugs reproduce from a one-line zone snippet — please include one.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear, concise description of the bug
+      placeholder: When I import a zone with X, the parser does Y instead of Z.
+    validations:
+      required: true
+
+  - type: textarea
+    id: zone-snippet
+    attributes:
+      label: Zone snippet (if applicable)
+      description: Minimal zone-file lines that reproduce the bug. Strip anything sensitive.
+      render: text
+      placeholder: |
+        $ORIGIN example.com.
+        $TTL 300
+        @ IN SOA ns.example.com. admin.example.com. (1 1H 1H 1W 1H)
+        ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: I expected the parser to keep the embedded ; in the TXT value.
+    validations:
+      required: true
+
+  - type: input
+    id: where
+    attributes:
+      label: Where did this happen?
+      description: Editor, propagation check, email-health card, DMARC ramp, export, …
+      placeholder: Parser / import flow
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & version
+      placeholder: Chrome 130 on Windows 11
+    validations:
+      required: false
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors (if any)
+      description: Open DevTools → Console; paste anything red.
+      render: text
+    validations:
+      required: false
