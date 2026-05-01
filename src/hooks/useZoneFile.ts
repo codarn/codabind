@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import { importFromDns as fetchFromDns } from "../dns/import";
+import { DEFAULT_RESOLVERS } from "../dns/resolvers";
 import { MAX_FILE_BYTES } from "../zone/constants";
 import { parseZone } from "../zone/parser";
 import { serializeZone } from "../zone/serializer";
@@ -7,7 +9,9 @@ import type { Zone } from "../zone/types";
 interface UseZoneFile {
   parseErrors: string[];
   importedName: string;
+  isResolving: boolean;
   importFile: (file: File) => Promise<Zone | null>;
+  importFromDns: (resolverId: string, domain: string) => Promise<Zone | null>;
   exportZone: (zone: Zone) => void;
   reset: () => void;
 }
@@ -15,6 +19,7 @@ interface UseZoneFile {
 export function useZoneFile(): UseZoneFile {
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [importedName, setImportedName] = useState("");
+  const [isResolving, setIsResolving] = useState(false);
 
   const importFile = useCallback(async (file: File): Promise<Zone | null> => {
     if (file.size > MAX_FILE_BYTES) {
@@ -30,6 +35,28 @@ export function useZoneFile(): UseZoneFile {
     setImportedName(file.name);
     return result.zone;
   }, []);
+
+  const importFromDns = useCallback(
+    async (resolverId: string, domain: string): Promise<Zone | null> => {
+      setIsResolving(true);
+      try {
+        const result = await fetchFromDns(resolverId, domain);
+        const resolver = DEFAULT_RESOLVERS.find((r) => r.id === resolverId);
+        const label = resolver?.name ?? resolverId;
+        const cleaned = domain.trim().replace(/\.$/, "");
+        if (result.zone.records.length === 0 && result.errors.length === 0) {
+          setParseErrors([`No records returned from ${label} for ${cleaned}.`]);
+        } else {
+          setParseErrors(result.errors);
+        }
+        setImportedName(`${cleaned} (via ${label})`);
+        return result.zone;
+      } finally {
+        setIsResolving(false);
+      }
+    },
+    [],
+  );
 
   const exportZone = useCallback((zone: Zone) => {
     const text = serializeZone(zone);
@@ -50,5 +77,5 @@ export function useZoneFile(): UseZoneFile {
     setImportedName("");
   }, []);
 
-  return { parseErrors, importedName, importFile, exportZone, reset };
+  return { parseErrors, importedName, isResolving, importFile, importFromDns, exportZone, reset };
 }

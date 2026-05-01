@@ -29,7 +29,7 @@ export function App() {
   const [zone, setZone] = useState<Zone>(emptyZone);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("ALL");
   const [selectedPath, setSelectedPath] = useState<string[]>([]);
-  const { parseErrors, importedName, importFile, exportZone, reset } = useZoneFile();
+  const { parseErrors, importedName, isResolving, importFile, importFromDns, exportZone, reset } = useZoneFile();
   const dns = useDnsCheck();
 
   const issues = useMemo(() => validateZone(zone), [zone]);
@@ -66,6 +66,15 @@ export function App() {
 
   const handleImport = async (file: File) => {
     const next = await importFile(file);
+    if (next) {
+      setZone(next);
+      setSelectedPath([]);
+    }
+  };
+
+  const handleImportFromDns = async (resolverId: string, domain: string) => {
+    dns.reset();
+    const next = await importFromDns(resolverId, domain);
     if (next) {
       setZone(next);
       setSelectedPath([]);
@@ -127,7 +136,9 @@ export function App() {
       <Topbar
         canExport={errorCount === 0}
         isChecking={dns.isChecking}
+        isResolving={isResolving}
         onImport={handleImport}
+        onImportFromDns={handleImportFromDns}
         onExport={() => exportZone(zone)}
         onNew={handleNew}
         onAddRecord={handleAddRecord}

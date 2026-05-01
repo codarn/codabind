@@ -1,11 +1,13 @@
-import { useRef } from "react";
 import { GitHubLink } from "./GitHubLink";
+import { ImportMenu } from "./ImportMenu";
 import { Logo } from "./Logo";
 
 interface TopbarProps {
   canExport: boolean;
   isChecking: boolean;
+  isResolving: boolean;
   onImport: (file: File) => void;
+  onImportFromDns: (resolverId: string, domain: string) => void;
   onExport: () => void;
   onNew: () => void;
   onAddRecord: () => void;
@@ -16,15 +18,15 @@ interface TopbarProps {
 export function Topbar({
   canExport,
   isChecking,
+  isResolving,
   onImport,
+  onImportFromDns,
   onExport,
   onNew,
   onAddRecord,
   onCheck,
   onCancelCheck,
 }: TopbarProps) {
-  const fileInput = useRef<HTMLInputElement>(null);
-
   return (
     <header className="topbar">
       <div className="brand">
@@ -32,17 +34,10 @@ export function Topbar({
         <h1>Codabind</h1>
       </div>
       <div className="actions">
-        <button onClick={() => fileInput.current?.click()}>Import…</button>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".zone,.db,.txt,text/plain"
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) onImport(f);
-            e.target.value = "";
-          }}
+        <ImportMenu
+          onImportFile={onImport}
+          onImportFromDns={onImportFromDns}
+          isResolving={isResolving}
         />
         <button
           onClick={onExport}

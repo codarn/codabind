@@ -209,6 +209,101 @@ button.primary:hover:not(:disabled) {
   align-items: center;
 }
 
+.import-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.import-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  min-width: 220px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.import-dropdown button[role="menuitem"] {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 10px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+.import-dropdown button[role="menuitem"]:hover {
+  background: var(--panel-2);
+}
+.import-dropdown .region {
+  color: var(--muted);
+  font-size: 11px;
+  font-family: var(--mono);
+}
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+.dropdown-label {
+  padding: 6px 10px 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.dns-import-form {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.dns-import-form .hint {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.dns-import-form input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  min-width: 220px;
+}
+.dns-import-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.dns-import-form button {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .github-link {
   display: inline-flex;
   align-items: center;
