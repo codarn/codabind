@@ -16,7 +16,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/gen-og-png.mjs",
     "build": "tsc -b && vite build",
+    "og:build": "node scripts/gen-og-png.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -28,6 +30,7 @@
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
