@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest a new capability or an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Codabind aims to stay narrow: a browser-only zone editor with live propagation and email-deliverability linting. Features that fit that scope land easily; features that pull in a backend, signups, analytics, or telemetry won't.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the situation that's painful today, not the feature.
+      placeholder: I publish DKIM keys via three providers and have no quick way to see which selector belongs to which.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Sketch what you'd build. Mockups, snippets, anything.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      placeholder: Could be solved by … but that has tradeoff …
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Does this fit the self-operating philosophy?
+      options:
+        - Yes — pure-browser, no new outbound traffic
+        - Yes — adds a DoH-style call to a public, allowlisted endpoint
+        - I'm not sure
+        - No — but I think it's worth the trade-off (please explain below)
+    validations:
+      required: true

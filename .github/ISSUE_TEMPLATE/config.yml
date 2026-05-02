@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or discussion
+    url: https://github.com/codarn/codabind/discussions
+    about: For questions, ideas, or open-ended conversations — not bug reports.
+  - name: Security report
+    url: https://github.com/codarn/codabind/security/advisories/new
+    about: Report a security issue privately via GitHub Security Advisories.
