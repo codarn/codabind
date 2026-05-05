@@ -12,23 +12,7 @@ export interface EmailCheck {
   records: ZoneRecord[];
 }
 
-const KNOWN_DKIM_PROVIDERS: Record<string, string> = {
-  google: "Google Workspace",
-  selector1: "Microsoft 365",
-  selector2: "Microsoft 365",
-  mailgun: "Mailgun",
-  k1: "Mailchimp",
-  k2: "Mailchimp",
-  k3: "Mailchimp",
-  pm: "Postmark",
-  sendgrid: "SendGrid",
-  s1: "SendGrid",
-  s2: "SendGrid",
-  zoho: "Zoho",
-  amazonses: "Amazon SES",
-  ahasend: "AhaSend",
-  ahasend2: "AhaSend",
-};
+import { KNOWN_DKIM_PROVIDERS } from "./dkim-providers";
 
 function stripTrailingDot(s: string): string {
   return s.replace(/\.$/, "");

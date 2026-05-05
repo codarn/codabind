@@ -1,14 +1,20 @@
+import { KNOWN_DKIM_PROVIDERS } from "../email/dkim-providers";
 import type { RecordType, Zone, ZoneRecord } from "../zone/types";
 import { query } from "./query";
 import { DEFAULT_RESOLVERS } from "./resolvers";
 import type { DohAnswer } from "./types";
 
 const APEX_TYPES: RecordType[] = ["SOA", "NS", "A", "AAAA", "MX", "TXT", "CAA"];
+
 const SUBDOMAIN_PROBES: Array<{ name: string; types: RecordType[] }> = [
   { name: "www", types: ["A", "AAAA", "CNAME"] },
   { name: "_dmarc", types: ["TXT"] },
   { name: "mail", types: ["A", "AAAA", "CNAME"] },
   { name: "autodiscover", types: ["CNAME"] },
+  ...Object.keys(KNOWN_DKIM_PROVIDERS).map((sel) => ({
+    name: `${sel}._domainkey`,
+    types: ["TXT", "CNAME"] as RecordType[],
+  })),
 ];
 
 export interface DnsImportResult {
