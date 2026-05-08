@@ -5,6 +5,8 @@ const RESOLVER_HOSTS = [
   "https://cloudflare-dns.com",
   "https://dns.google",
   "https://doh.dns.sb",
+  "https://dns.alidns.com",
+  "https://basic.rethinkdns.com",
 ].join(" ");
 
 const API_HOSTS = ["https://api.github.com"].join(" ");
