@@ -26,8 +26,8 @@
     "audit": "npm audit --omit=dev --audit-level=high"
   },
   "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
